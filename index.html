@@ -1,409 +1,561 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-<link rel="manifest" href="manifest.json">
-<title>Textarea</title>
-<style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)">
+    <title>Textarea</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --bg-elevated: #f6f8fa;
+        --bg-subtle: #f3f4f6;
+        --panel: #ffffff;
+        --line: #d0d7de;
+        --line-strong: #b6c2cf;
+        --text: #24292f;
+        --text-soft: #57606a;
+        --text-faint: #8c959f;
+        --accent: #0969da;
+        --accent-strong: #0550ae;
+        --shadow: rgba(31, 35, 40, 0.08);
+      }
 
-  html {
-    color-scheme: light dark;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-    background-color: #fff;
-    color: #161616;
-  }
+      html[data-theme="dark"] {
+        --bg: #0d1117;
+        --bg-elevated: #161b22;
+        --bg-subtle: #21262d;
+        --panel: #0d1117;
+        --line: #30363d;
+        --line-strong: #484f58;
+        --text: #c9d1d9;
+        --text-soft: #8b949e;
+        --text-faint: #6e7681;
+        --accent: #58a6ff;
+        --accent-strong: #79c0ff;
+        --shadow: rgba(1, 4, 9, 0.35);
+      }
 
-  @media (prefers-color-scheme: dark) {
-    html {
-      background-color: #0d1117;
-      color: #c9d1d9;
-    }
-  }
+      html[data-theme="sepia"] {
+        --bg: #f4ecd8;
+        --bg-elevated: #e8dcc8;
+        --bg-subtle: #f0e4d2;
+        --panel: #f7f1e6;
+        --line: #c4b59d;
+        --line-strong: #b1977d;
+        --text: #5b4636;
+        --text-soft: #7a6852;
+        --text-faint: #927f6c;
+        --accent: #8b5a2b;
+        --accent-strong: #73461a;
+        --shadow: rgba(85, 62, 35, 0.08);
+      }
 
-  body {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    font: 16px / 1.6 system-ui, -apple-system, sans-serif;
-    -webkit-font-smoothing: antialiased;
-  }
+      * { box-sizing: border-box; }
 
-  .toolbar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    background: #f6f8fa;
-    border-bottom: 1px solid #d0d7de;
-    flex-shrink: 0;
-  }
+      html, body {
+        margin: 0;
+        height: 100%;
+        background: var(--bg);
+        color: var(--text);
+        font: 16px/1.6 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
 
-  @media (prefers-color-scheme: dark) {
-    .toolbar {
-      background: #161b22;
-      border-bottom-color: #30363d;
-    }
-  }
+      body { min-height: 100vh; }
+      button, textarea { font: inherit; }
 
-  .toolbar button {
-    padding: 6px 12px;
-    border: 1px solid #d0d7de;
-    background: #fff;
-    color: #24292f;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.2s;
-  }
+      button {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        color: var(--text);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.15s ease;
+      }
 
-  @media (prefers-color-scheme: dark) {
-    .toolbar button {
-      background: #21262d;
-      border-color: #30363d;
-      color: #c9d1d9;
-    }
-  }
+      button:hover {
+        background: var(--bg-subtle);
+        border-color: var(--line-strong);
+      }
 
-  .toolbar button:hover {
-    background: #f3f4f6;
-  }
+      .app {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
 
-  @media (prefers-color-scheme: dark) {
-    .toolbar button:hover {
-      background: #30363d;
-    }
-  }
+      .toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 12px;
+        background: var(--bg-elevated);
+        border-bottom: 1px solid var(--line);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
 
-  .toolbar-title {
-    flex: 1;
-    font-weight: 600;
-    font-size: 14px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+      .toolbar-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
 
-  .container {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
-  }
+      .toolbar button {
+        padding: 7px 12px;
+        font-size: 14px;
+        font-weight: 600;
+      }
 
-  .sidebar {
-    width: 260px;
-    background: #f6f8fa;
-    border-right: 1px solid #d0d7de;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    transition: transform 0.2s ease, width 0.2s ease;
-  }
+      .toolbar .primary {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
 
-  .sidebar.hidden {
-    transform: translateX(-100%);
-    width: 0;
-    border-right: none;
-  }
+      .toolbar .primary:hover {
+        background: var(--accent-strong);
+        border-color: var(--accent-strong);
+      }
 
-  @media (prefers-color-scheme: dark) {
-    .sidebar {
-      background: #161b22;
-      border-right-color: #30363d;
-    }
-  }
+      .shell {
+        display: flex;
+        flex: 1;
+        min-height: 0;
+      }
 
-  .sidebar-header {
-    padding: 12px;
-    border-bottom: 1px solid #d0d7de;
-    display: flex;
-    gap: 6px;
-    flex-shrink: 0;
-  }
+      .sidebar {
+        width: 280px;
+        background: var(--bg-elevated);
+        border-right: 1px solid var(--line);
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
 
-  @media (prefers-color-scheme: dark) {
-    .sidebar-header {
-      border-bottom-color: #30363d;
-    }
-  }
+      .sidebar-header {
+        padding: 14px 12px 10px;
+        border-bottom: 1px solid var(--line);
+      }
 
-  .sidebar-header button {
-    flex: 1;
-    padding: 6px 10px;
-    background: #fff;
-    border: 1px solid #d0d7de;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: 500;
-    color: #24292f;
-  }
+      .sidebar-header h2 {
+        margin: 0 0 8px;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-soft);
+      }
 
-  @media (prefers-color-scheme: dark) {
-    .sidebar-header button {
-      background: #21262d;
-      border-color: #30363d;
-      color: #c9d1d9;
-    }
-  }
+      .tab-row {
+        display: flex;
+        gap: 6px;
+      }
 
-  .sidebar-header button.active {
-    background: #0969da;
-    color: #fff;
-    border-color: #0969da;
-  }
+      .tab-row button {
+        flex: 1;
+        padding: 6px 8px;
+        font-size: 12px;
+        font-weight: 600;
+        background: transparent;
+      }
 
-  .sidebar-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 8px;
-  }
+      .tab-row button.active {
+        background: var(--bg-subtle);
+        border-color: var(--line-strong);
+      }
 
-  .doc-item {
-    padding: 10px;
-    margin-bottom: 4px;
-    border-radius: 6px;
-    cursor: pointer;
-    background: transparent;
-    border: 1px solid transparent;
-    transition: all 0.2s;
-    text-align: left;
-  }
+      .note-list {
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        overflow-y: auto;
+      }
 
-  .doc-item:hover {
-    background: rgba(0, 0, 0, 0.05);
-    border-color: #d0d7de;
-  }
+      .note-item {
+        width: 100%;
+        text-align: left;
+        padding: 10px 12px;
+        background: transparent;
+        border: 1px solid transparent;
+        border-radius: 10px;
+        color: var(--text);
+      }
 
-  @media (prefers-color-scheme: dark) {
-    .doc-item:hover {
-      background: rgba(255, 255, 255, 0.08);
-    }
-  }
+      .note-item:hover {
+        background: var(--bg-subtle);
+        border-color: var(--line);
+      }
 
-  .doc-item.active {
-    background: #0969da;
-    color: #fff;
-    border-color: #0969da;
-  }
+      .note-item.active {
+        background: var(--bg-subtle);
+        border-color: var(--line-strong);
+      }
 
-  .doc-title {
-    font-weight: 500;
-    font-size: 13px;
-    margin-bottom: 3px;
-  }
+      .note-item strong {
+        display: block;
+        font-size: 14px;
+        line-height: 1.4;
+        margin-bottom: 2px;
+      }
 
-  .doc-meta {
-    font-size: 11px;
-    opacity: 0.7;
-  }
+      .note-item small {
+        display: block;
+        color: var(--text-soft);
+        font-size: 11px;
+        line-height: 1.4;
+      }
 
-  .main-content {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    overflow: hidden;
-  }
+      .editor-panel {
+        flex: 1;
+        min-width: 0;
+        background: var(--bg);
+        position: relative;
+      }
 
-  .editor {
-    flex: 1;
-    padding: 24px max(24px, calc(50vw - 400px));
-    outline: none;
-    font: 18px / 1.5 system-ui;
-    tab-size: 4;
-    white-space: pre-wrap;
-    overflow-wrap: break-word;
-    overflow-y: auto;
-    background: transparent;
-    color: inherit;
-    border: none;
-    resize: none;
-  }
+      .empty-state {
+        display: grid;
+        place-items: center;
+        height: 100%;
+        text-align: center;
+        padding: 40px 20px;
+      }
 
-  .landing {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 40px 20px;
-  }
+      .empty-state.hidden,
+      .editor-shell.hidden {
+        display: none;
+      }
 
-  .landing h1 {
-    font-size: 32px;
-    margin-bottom: 12px;
-  }
+      .empty-card {
+        max-width: 420px;
+        padding: 32px 24px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: 0 10px 30px var(--shadow);
+      }
 
-  .landing p {
-    font-size: 16px;
-    opacity: 0.6;
-    margin-bottom: 40px;
-  }
+      .empty-card h1 {
+        margin: 0 0 12px;
+        font-size: clamp(2rem, 5vw, 3rem);
+        letter-spacing: -0.05em;
+      }
 
-  .doc-list {
-    width: 100%;
-    max-width: 520px;
-    margin-bottom: 32px;
-  }
+      .empty-card p {
+        margin: 0 0 20px;
+        color: var(--text-soft);
+        font-size: 1rem;
+      }
 
-  .doc-list-title {
-    text-align: left;
-    font-weight: 600;
-    margin-bottom: 12px;
-    font-size: 14px;
-  }
+      .empty-card button {
+        padding: 10px 16px;
+        font-weight: 600;
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
 
-  .doc-list-items {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    max-height: 400px;
-    overflow-y: auto;
-  }
+      .empty-card button:hover {
+        background: var(--accent-strong);
+        border-color: var(--accent-strong);
+      }
 
-  .landing-doc-item {
-    padding: 12px 16px;
-    background: #f6f8fa;
-    border: 1px solid #d0d7de;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: left;
-  }
+      .editor-shell {
+        height: 100%;
+        display: flex;
+      }
 
-  @media (prefers-color-scheme: dark) {
-    .landing-doc-item {
-      background: #21262d;
-      border-color: #30363d;
-    }
-  }
+      textarea.editor {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        resize: none;
+        outline: none;
+        background: transparent;
+        color: var(--text);
+        font: 16px/1.7 "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        padding: 32px clamp(22px, 4vw, 48px);
+      }
 
-  .landing-doc-item:hover {
-    background: #f0f2f5;
-  }
+      textarea.editor::placeholder {
+        color: var(--text-faint);
+      }
 
-  @media (prefers-color-scheme: dark) {
-    .landing-doc-item:hover {
-      background: #30363d;
-    }
-  }
+      @media (max-width: 760px) {
+        .shell { flex-direction: column; }
 
-  .landing-doc-title {
-    font-weight: 500;
-    font-size: 14px;
-    margin-bottom: 4px;
-  }
+        .sidebar {
+          width: 100%;
+          height: 220px;
+          border-right: none;
+          border-bottom: 1px solid var(--line);
+        }
 
-  .landing-doc-time {
-    font-size: 12px;
-    opacity: 0.6;
-  }
+        .note-list {
+          flex-direction: row;
+          overflow-x: auto;
+          overflow-y: hidden;
+        }
 
-  .btn {
-    padding: 10px 20px;
-    border: 1px solid #d0d7de;
-    background: #fff;
-    color: #24292f;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.2s;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .btn {
-      background: #21262d;
-      border-color: #30363d;
-      color: #c9d1d9;
-    }
-  }
-
-  .btn:hover {
-    background: #f0f2f5;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .btn:hover {
-      background: #30363d;
-    }
-  }
-
-  .btn.primary {
-    background: #0969da;
-    color: #fff;
-    border-color: #0969da;
-  }
-
-  .btn.primary:hover {
-    background: #0860ca;
-  }
-
-  .notification {
-    position: fixed;
-    top: 16px;
-    right: 16px;
-    background: #28a745;
-    color: #fff;
-    padding: 12px 20px;
-    border-radius: 6px;
-    font-size: 14px;
-    opacity: 0;
-    transition: opacity 0.2s;
-    pointer-events: none;
-    z-index: 1000;
-  }
-
-  .notification.show {
-    opacity: 1;
-  }
-
-  @media print {
-    .toolbar,
-    .sidebar {
-      display: none !important;
-    }
-  }
-</style>
-
-<body>
-  <div class="toolbar">
-    <button id="toggle-sidebar" title="Toggle sidebar">☰</button>
-    <div class="toolbar-title" id="title">Textarea</div>
-  </div>
-
-  <div class="container">
-    <aside id="sidebar" class="sidebar">
-      <div class="sidebar-header">
-        <button id="tab-current" class="active">Current</button>
-        <button id="tab-others">Others</button>
-      </div>
-      <div id="sidebar-content" class="sidebar-content"></div>
-    </aside>
-
-    <main class="main-content">
-      <textarea id="editor" class="editor" spellcheck="true" style="display: none;"></textarea>
-      <div id="landing" class="landing">
-        <h1>Textarea</h1>
-        <p>A minimalist text editor for your thoughts</p>
-        <div id="landing-docs" class="doc-list" style="display: none;">
-          <div class="doc-list-title">Your notes</div>
-          <div class="doc-list-items" id="landing-list"></div>
+        .note-item {
+          min-width: 180px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header class="toolbar">
+        <div class="toolbar-group">
+          <button id="new-note-btn" class="primary" type="button">New note</button>
         </div>
-        <button class="btn primary" id="new-btn">+ New Note</button>
+        <div class="toolbar-group">
+          <button id="theme-toggle-btn" type="button" aria-label="Toggle theme">Theme</button>
+        </div>
+      </header>
+
+      <div class="shell">
+        <aside class="sidebar" aria-label="Notes panel">
+          <div class="sidebar-header">
+            <h2>Notes</h2>
+            <div class="tab-row" aria-label="Note groups">
+              <button type="button" class="tab active" data-filter="all">All</button>
+              <button type="button" class="tab" data-filter="recent">Recent</button>
+            </div>
+          </div>
+          <div id="note-list" class="note-list" aria-live="polite"></div>
+        </aside>
+
+        <main class="editor-panel">
+          <div id="empty-state" class="empty-state">
+            <div class="empty-card">
+              <h1>Textarea</h1>
+              <p>Capture a thought, plan, or note. Start with a blank page.</p>
+              <button id="empty-new-note-btn" type="button">Create note</button>
+            </div>
+          </div>
+
+          <div id="editor-shell" class="editor-shell hidden">
+            <textarea id="editor" class="editor" spellcheck="true" aria-label="Note editor" placeholder="Write something..."></textarea>
+          </div>
+        </main>
       </div>
-    </main>
-  </div>
+    </div>
 
-  <div id="notification" class="notification"></div>
+    <script>
+      const STORAGE_KEY = 'textarea_notes_v1';
+      const THEME_KEY = 'textarea_theme_v1';
 
-  <script src="app.js"></script>
-</body>
+      const state = {
+        notes: [],
+        currentId: null,
+        filter: 'all',
+        theme: 'light',
+      };
+
+      const noteList = document.getElementById('note-list');
+      const editor = document.getElementById('editor');
+      const emptyState = document.getElementById('empty-state');
+      const editorShell = document.getElementById('editor-shell');
+      const themeToggleBtn = document.getElementById('theme-toggle-btn');
+      const tabButtons = [...document.querySelectorAll('.tab')];
+
+      function safeNow() {
+        return Date.now();
+      }
+
+      function createId() {
+        if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+        return 'note-' + safeNow() + '-' + Math.random().toString(16).slice(2);
+      }
+
+      function getTitleFromContent(content = '') {
+        const lines = content.split(/\r?\n/);
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed) continue;
+
+          const heading = trimmed.replace(/^#+\s*/, '').trim();
+          if (heading) return heading;
+
+          return trimmed.slice(0, 80);
+        }
+
+        return 'Untitled';
+      }
+
+      function getPreviewText(content = '') {
+        const cleaned = content.replace(/\s+/g, ' ').trim();
+        return cleaned ? cleaned.slice(0, 80) : 'Empty note';
+      }
+
+      function readNotes() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          const parsed = raw ? JSON.parse(raw) : [];
+          return Array.isArray(parsed) ? parsed : [];
+        } catch {
+          return [];
+        }
+      }
+
+      function writeNotes() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state.notes));
+      }
+
+      function sortNotes(notes) {
+        return [...notes].sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+      }
+
+      function syncTheme() {
+        document.documentElement.setAttribute('data-theme', state.theme);
+        localStorage.setItem(THEME_KEY, state.theme);
+        themeToggleBtn.textContent = state.theme === 'light' ? 'Theme' : state.theme === 'dark' ? 'Light' : 'Dark';
+      }
+
+      function loadTheme() {
+        const stored = localStorage.getItem(THEME_KEY);
+        if (stored === 'dark' || stored === 'sepia') {
+          state.theme = stored;
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          state.theme = 'dark';
+        } else {
+          state.theme = 'light';
+        }
+
+        syncTheme();
+      }
+
+      function createFreshNote() {
+        const note = {
+          id: createId(),
+          title: 'Untitled',
+          content: '',
+          updatedAt: safeNow(),
+        };
+
+        state.notes = sortNotes([note, ...state.notes]);
+        state.currentId = note.id;
+        writeNotes();
+        render();
+        editor.focus();
+      }
+
+      function selectNote(id) {
+        state.currentId = id;
+        render();
+      }
+
+      function getCurrentNote() {
+        return state.notes.find(note => note.id === state.currentId) || null;
+      }
+
+      function renderSidebar() {
+        const notes = state.filter === 'recent' ? state.notes.slice(0, 8) : state.notes;
+
+        if (!notes.length) {
+          noteList.innerHTML = '<div style="padding: 12px; color: var(--text-soft); font-size: 13px;">No notes yet.</div>';
+          return;
+        }
+
+        noteList.innerHTML = '';
+
+        notes.forEach(note => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'note-item' + (note.id === state.currentId ? ' active' : '');
+
+          const title = document.createElement('strong');
+          title.textContent = note.title || 'Untitled';
+
+          const meta = document.createElement('small');
+          const date = new Date(note.updatedAt || Date.now());
+          meta.textContent = `${date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} · ${getPreviewText(note.content)}`;
+
+          button.appendChild(title);
+          button.appendChild(meta);
+          button.addEventListener('click', () => selectNote(note.id));
+          noteList.appendChild(button);
+        });
+      }
+
+      function renderEditor() {
+        const note = getCurrentNote();
+
+        if (!note) {
+          emptyState.classList.remove('hidden');
+          editorShell.classList.add('hidden');
+          editor.value = '';
+          return;
+        }
+
+        emptyState.classList.add('hidden');
+        editorShell.classList.remove('hidden');
+        editor.value = note.content;
+      }
+
+      function render() {
+        renderSidebar();
+        renderEditor();
+      }
+
+      function updateCurrentNote(content) {
+        const note = getCurrentNote();
+        if (!note) return;
+
+        note.content = content;
+        note.title = getTitleFromContent(content);
+        note.updatedAt = safeNow();
+
+        state.notes = sortNotes(state.notes);
+        writeNotes();
+        renderSidebar();
+      }
+
+      document.getElementById('new-note-btn').addEventListener('click', createFreshNote);
+      document.getElementById('empty-new-note-btn').addEventListener('click', createFreshNote);
+
+      themeToggleBtn.addEventListener('click', () => {
+        if (state.theme === 'light') state.theme = 'dark';
+        else if (state.theme === 'dark') state.theme = 'sepia';
+        else state.theme = 'light';
+        syncTheme();
+      });
+
+      editor.addEventListener('input', event => {
+        updateCurrentNote(event.target.value);
+      });
+
+      tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          state.filter = button.dataset.filter;
+          tabButtons.forEach(tab => tab.classList.toggle('active', tab === button));
+          renderSidebar();
+        });
+      });
+
+      function init() {
+        loadTheme();
+
+        state.notes = sortNotes(readNotes()).map(note => ({
+          id: note.id || createId(),
+          title: note.title || getTitleFromContent(note.content || ''),
+          content: note.content || '',
+          updatedAt: note.updatedAt || Date.now(),
+        }));
+
+        state.currentId = state.notes.length ? state.notes[0].id : null;
+        writeNotes();
+        render();
+      }
+
+      init();
+    </script>
+  </body>
+</html>
