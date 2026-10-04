@@ -16,266 +16,252 @@
     color-scheme: light dark;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-
     background-color: #fff;
-    --elevated: #fff;
-    --link: #0066cc;
-    --text: #161616;
-    --outline: #007aff;
-    --border: #d0d7de;
-    --bg-hover: rgba(0, 0, 0, 0.04);
+    color: #161616;
+  }
 
-    @media (prefers-color-scheme: dark) {
-      background-color: #000;
-      --elevated: #121212;
-      --link: #58a6ff;
-      --text: #fff;
-      --border: #30363d;
-      --bg-hover: #353535;
+  @media (prefers-color-scheme: dark) {
+    html {
+      background-color: #0d1117;
+      color: #c9d1d9;
     }
   }
 
   body {
-    color: var(--text);
     display: flex;
     flex-direction: column;
     height: 100vh;
+    font: 16px / 1.6 system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
 
-  a {
-    color: var(--link);
-    text-decoration: underline;
-    text-underline-offset: 4px;
-    text-decoration-thickness: 1px;
-  }
-
-  .top-bar {
+  .toolbar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 12px 16px;
-    background: var(--elevated);
-    border-bottom: 1px solid var(--border);
+    gap: 8px;
+    padding: 8px 12px;
+    background: #f6f8fa;
+    border-bottom: 1px solid #d0d7de;
     flex-shrink: 0;
-    gap: 12px;
   }
 
-  .top-bar-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  @media (prefers-color-scheme: dark) {
+    .toolbar {
+      background: #161b22;
+      border-bottom-color: #30363d;
+    }
   }
 
-  .top-bar-title {
-    font-size: 16px;
+  .toolbar button {
+    padding: 6px 12px;
+    border: 1px solid #d0d7de;
+    background: #fff;
+    color: #24292f;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .toolbar button {
+      background: #21262d;
+      border-color: #30363d;
+      color: #c9d1d9;
+    }
+  }
+
+  .toolbar button:hover {
+    background: #f3f4f6;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .toolbar button:hover {
+      background: #30363d;
+    }
+  }
+
+  .toolbar-title {
+    flex: 1;
     font-weight: 600;
-    color: var(--text);
+    font-size: 14px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  .top-bar button {
-    -webkit-tap-highlight-color: transparent;
-    background: transparent;
-    border: none;
-    color: var(--text);
-    cursor: pointer;
-    padding: 6px 8px;
-    border-radius: 6px;
-    font-size: 14px;
-    transition: background-color 0.2s;
-    user-select: none;
-  }
-
-  .top-bar button:hover {
-    background-color: var(--bg-hover);
-  }
-
-  .top-bar button:focus-visible {
-    outline: 2px solid var(--outline);
-    outline-offset: 2px;
-  }
-
   .container {
     display: flex;
     flex: 1;
-    min-height: 0;
     overflow: hidden;
   }
 
-  .document-panel {
+  .sidebar {
     width: 260px;
-    background: var(--elevated);
-    border-right: 1px solid var(--border);
+    background: #f6f8fa;
+    border-right: 1px solid #d0d7de;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     transition: transform 0.2s ease, width 0.2s ease;
   }
 
-  .document-panel.hidden {
+  .sidebar.hidden {
     transform: translateX(-100%);
     width: 0;
     border-right: none;
   }
 
-  .panel-header {
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    gap: 8px;
+  @media (prefers-color-scheme: dark) {
+    .sidebar {
+      background: #161b22;
+      border-right-color: #30363d;
+    }
   }
 
-  .panel-header button {
+  .sidebar-header {
+    padding: 12px;
+    border-bottom: 1px solid #d0d7de;
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .sidebar-header {
+      border-bottom-color: #30363d;
+    }
+  }
+
+  .sidebar-header button {
     flex: 1;
-    padding: 8px 12px;
-    background: var(--elevated);
-    border: 1px solid var(--border);
+    padding: 6px 10px;
+    background: #fff;
+    border: 1px solid #d0d7de;
     border-radius: 6px;
     cursor: pointer;
     font-size: 12px;
     font-weight: 500;
-    color: var(--text);
-    transition: background-color 0.2s;
+    color: #24292f;
   }
 
-  .panel-header button:hover {
-    background-color: var(--bg-hover);
+  @media (prefers-color-scheme: dark) {
+    .sidebar-header button {
+      background: #21262d;
+      border-color: #30363d;
+      color: #c9d1d9;
+    }
   }
 
-  .panel-header button.active {
-    background-color: var(--outline);
+  .sidebar-header button.active {
+    background: #0969da;
     color: #fff;
-    border-color: var(--outline);
+    border-color: #0969da;
   }
 
-  .panel-content {
+  .sidebar-content {
     flex: 1;
     overflow-y: auto;
     padding: 8px;
   }
 
-  .document-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 6px;
-    padding: 12px;
+  .doc-item {
+    padding: 10px;
+    margin-bottom: 4px;
     border-radius: 6px;
     cursor: pointer;
-    margin-bottom: 4px;
     background: transparent;
     border: 1px solid transparent;
     transition: all 0.2s;
     text-align: left;
   }
 
-  .document-item:hover {
-    background-color: var(--bg-hover);
-    border-color: var(--border);
+  .doc-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: #d0d7de;
   }
 
-  .document-item.active {
-    background-color: var(--outline);
+  @media (prefers-color-scheme: dark) {
+    .doc-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+  }
+
+  .doc-item.active {
+    background: #0969da;
     color: #fff;
-    border-color: var(--outline);
+    border-color: #0969da;
   }
 
-  .document-main {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .document-title {
+  .doc-title {
     font-weight: 500;
-    font-size: 14px;
-    margin-bottom: 4px;
-    word-break: break-word;
+    font-size: 13px;
+    margin-bottom: 3px;
   }
 
-  .document-meta {
-    font-size: 12px;
+  .doc-meta {
+    font-size: 11px;
     opacity: 0.7;
+  }
+
+  .main-content {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .document-delete {
-    background: transparent;
-    border: none;
-    color: inherit;
-    cursor: pointer;
-    padding: 2px 4px;
-    font-size: 14px;
-    opacity: 0.5;
-    transition: opacity 0.2s;
-  }
-
-  .document-delete:hover {
-    opacity: 1;
-  }
-
-  .editor-view {
     flex: 1;
-    display: flex;
     flex-direction: column;
     overflow: hidden;
   }
 
-  article {
-    outline: none;
+  .editor {
     flex: 1;
-    width: 100%;
     padding: 24px max(24px, calc(50vw - 400px));
+    outline: none;
     font: 18px / 1.5 system-ui;
     tab-size: 4;
     white-space: pre-wrap;
-    text-wrap-style: stable;
     overflow-wrap: break-word;
     overflow-y: auto;
     background: transparent;
-    color: var(--text);
+    color: inherit;
+    border: none;
+    resize: none;
   }
 
-  .landing-view {
+  .landing {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 40px 20px;
     text-align: center;
+    padding: 40px 20px;
   }
 
-  .landing-header {
-    margin-bottom: 40px;
-  }
-
-  .landing-header h1 {
+  .landing h1 {
     font-size: 32px;
     margin-bottom: 12px;
   }
 
-  .landing-header p {
+  .landing p {
     font-size: 16px;
-    opacity: 0.7;
+    opacity: 0.6;
+    margin-bottom: 40px;
   }
 
-  .documents-list {
+  .doc-list {
     width: 100%;
     max-width: 520px;
     margin-bottom: 32px;
   }
 
-  .documents-list-header {
+  .doc-list-title {
     text-align: left;
-    margin-bottom: 16px;
     font-weight: 600;
+    margin-bottom: 12px;
+    font-size: 14px;
   }
 
-  .documents-list-items {
+  .doc-list-items {
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -283,302 +269,141 @@
     overflow-y: auto;
   }
 
-  .landing-document-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
+  .landing-doc-item {
     padding: 12px 16px;
-    background: var(--elevated);
-    border: 1px solid var(--border);
+    background: #f6f8fa;
+    border: 1px solid #d0d7de;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s;
     text-align: left;
   }
 
-  .landing-document-item:hover {
-    background-color: var(--bg-hover);
+  @media (prefers-color-scheme: dark) {
+    .landing-doc-item {
+      background: #21262d;
+      border-color: #30363d;
+    }
   }
 
-  .landing-document-info {
-    flex: 1;
-    min-width: 0;
+  .landing-doc-item:hover {
+    background: #f0f2f5;
   }
 
-  .landing-document-title {
+  @media (prefers-color-scheme: dark) {
+    .landing-doc-item:hover {
+      background: #30363d;
+    }
+  }
+
+  .landing-doc-title {
     font-weight: 500;
+    font-size: 14px;
     margin-bottom: 4px;
-    word-break: break-word;
   }
 
-  .landing-document-time {
+  .landing-doc-time {
     font-size: 12px;
-    opacity: 0.7;
+    opacity: 0.6;
   }
 
-  .landing-actions {
-    display: flex;
-    gap: 12px;
-  }
-
-  .action-btn {
+  .btn {
     padding: 10px 20px;
-    border: 1px solid var(--border);
-    background: var(--elevated);
+    border: 1px solid #d0d7de;
+    background: #fff;
+    color: #24292f;
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    color: var(--text);
     transition: all 0.2s;
   }
 
-  .action-btn:hover {
-    background-color: var(--bg-hover);
+  @media (prefers-color-scheme: dark) {
+    .btn {
+      background: #21262d;
+      border-color: #30363d;
+      color: #c9d1d9;
+    }
   }
 
-  .action-btn.primary {
-    background-color: var(--outline);
+  .btn:hover {
+    background: #f0f2f5;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .btn:hover {
+      background: #30363d;
+    }
+  }
+
+  .btn.primary {
+    background: #0969da;
     color: #fff;
-    border-color: var(--outline);
+    border-color: #0969da;
   }
 
-  .action-btn.primary:hover {
-    opacity: 0.9;
+  .btn.primary:hover {
+    background: #0860ca;
   }
 
-  .action-btn.danger {
-    color: #dc3545;
-  }
-
-  .action-btn.danger:hover {
-    background-color: rgba(220, 53, 69, 0.08);
-  }
-
-  .menu {
-    visibility: hidden;
-    transform: scale(0.9) translateY(20px);
-    transition: all 100ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-    opacity: 0;
-    display: flex;
-    flex-direction: column;
-    width: 180px;
+  .notification {
     position: fixed;
+    top: 16px;
     right: 16px;
-    bottom: 77px;
-    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.10), 0 15px 12px rgba(0, 0, 0, 0.05);
-    background: var(--elevated);
-    backdrop-filter: blur(10px);
-    border-radius: 10px;
-    z-index: 2;
-  }
-
-  .menu.visible {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-    visibility: visible;
-  }
-
-  .menu .item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    text-decoration: none;
-    text-align: left;
-    padding: 10px 14px;
-    overflow: hidden;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    outline: none;
-    border: none;
-    background: transparent;
-    touch-action: manipulation;
-    font: 16px / 1.5 system-ui;
-    color: var(--text);
-    transition: background-color 0.2s;
-  }
-
-  .menu .item:hover {
-    background-color: var(--bg-hover);
-  }
-
-  .menu .item:focus-visible {
-    outline: 2px solid var(--outline);
-  }
-
-  .menu .item:first-child {
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-  }
-
-  .menu .item:last-child {
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-  }
-
-  #menu-button {
-    -webkit-tap-highlight-color: transparent;
-    background-color: #0569fa;
-    border-radius: 50%;
-    border: none;
-    bottom: 15px;
-    box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, .12);
+    background: #28a745;
     color: #fff;
-    cursor: pointer;
-    display: grid;
-    font-weight: 600;
-    width: 46px;
-    height: 46px;
-    outline: none;
-    overflow: hidden;
-    padding: 0;
-    place-items: center;
-    position: fixed;
-    right: 15px;
-    text-decoration: none;
-    touch-action: manipulation;
-    transition: background-color .3s ease-out;
-    user-select: none;
-    z-index: 1;
-  }
-
-  @media (hover) {
-    #menu-button:hover {
-      color: #fff;
-      background-color: #3c86f3;
-      box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, .12);
-    }
-  }
-
-  #menu-button:focus-visible {
-    outline: 2px solid var(--outline);
-    outline-offset: 2px;
-  }
-
-  .ripple {
-    position: absolute;
-    border-radius: 50%;
-    transform: scale(0);
-    animation: ripple 600ms linear;
-    background-color: rgba(255, 255, 255, 0.7);
-  }
-
-  @keyframes ripple {
-    to {
-      transform: scale(4);
-      opacity: 0;
-    }
-  }
-
-  #notification {
-    visibility: hidden;
-    transform: translateY(-30px);
-    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 14px;
     opacity: 0;
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    right: 17px;
-    top: 17px;
-    background: #5ad227;
-    color: #fff;
-    border-radius: 30px;
-    font: 18px / 1 system-ui;
-    font-weight: 600;
-    z-index: 2;
-    padding: 10px 20px;
+    transition: opacity 0.2s;
+    pointer-events: none;
+    z-index: 1000;
   }
 
-  #notification.visible {
+  .notification.show {
     opacity: 1;
-    transform: translateY(0);
-    visibility: visible;
   }
 
   @media print {
-    .noprint {
-      visibility: hidden !important;
+    .toolbar,
+    .sidebar {
+      display: none !important;
     }
   }
 </style>
 
 <body>
-  <div class="top-bar">
-    <div class="top-bar-left">
-      <button id="panel-toggle" class="noprint" title="Toggle document list">☰</button>
-      <div class="top-bar-title" id="page-title">Textarea</div>
-    </div>
-    <div class="top-bar-right">
-      <span id="document-status" style="font-size: 12px; opacity: 0.7;"></span>
-    </div>
+  <div class="toolbar">
+    <button id="toggle-sidebar" title="Toggle sidebar">☰</button>
+    <div class="toolbar-title" id="title">Textarea</div>
   </div>
 
   <div class="container">
-    <aside id="document-panel" class="document-panel hidden noprint">
-      <div class="panel-header">
-        <button id="panel-current" class="panel-tab active" type="button">Current</button>
-        <button id="panel-others" class="panel-tab" type="button">Others</button>
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <button id="tab-current" class="active">Current</button>
+        <button id="tab-others">Others</button>
       </div>
-      <div class="panel-content" id="panel-content"></div>
+      <div id="sidebar-content" class="sidebar-content"></div>
     </aside>
 
-    <main class="editor-view">
-      <article contenteditable="plaintext-only" spellcheck autofocus style="display: none;"></article>
-
-      <div id="landing-view" class="landing-view">
-        <div class="landing-header">
-          <h1>Textarea</h1>
-          <p>A minimalist text editor for your thoughts</p>
+    <main class="main-content">
+      <textarea id="editor" class="editor" spellcheck="true" style="display: none;"></textarea>
+      <div id="landing" class="landing">
+        <h1>Textarea</h1>
+        <p>A minimalist text editor for your thoughts</p>
+        <div id="landing-docs" class="doc-list" style="display: none;">
+          <div class="doc-list-title">Your notes</div>
+          <div class="doc-list-items" id="landing-list"></div>
         </div>
-
-        <div id="documents-section" style="display: none;">
-          <div class="documents-list">
-            <div class="documents-list-header">Your documents</div>
-            <div class="documents-list-items" id="landing-docs"></div>
-          </div>
-        </div>
-
-        <div class="landing-actions">
-          <button id="new-doc-btn" class="action-btn primary" type="button">+ New Document</button>
-        </div>
+        <button class="btn primary" id="new-btn">+ New Note</button>
       </div>
     </main>
   </div>
 
-  <button id="menu-button" class="noprint" title="Menu" type="button">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="1"></circle>
-      <circle cx="12" cy="5" r="1"></circle>
-      <circle cx="12" cy="19" r="1"></circle>
-    </svg>
-  </button>
-
-  <div id="menu" class="menu noprint" role="menu">
-    <button class="item" id="new-from-menu" role="menuitem" type="button">
-      <svg aria-hidden="true" focusable="false" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-        <path d="M12 5l0 14M5 12l14 0"></path>
-      </svg>
-      New
-    </button>
-    <button class="item" id="download-btn" role="menuitem" type="button">
-      <svg aria-hidden="true" focusable="false" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-        <path d="M6 4h10l4 4v12a1 1 0 0 1 -1 1h-14a1 1 0 0 1 -1 -1v-15a1 1 0 0 1 1 -1"></path>
-        <path d="M12 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
-        <path d="M9 4l0 5l6 0l0 -5"></path>
-      </svg>
-      Download
-    </button>
-    <a class="item" href="https://github.com/DT3264/textarea" target="_blank" rel="noreferrer" role="menuitem">
-      <svg aria-hidden="true" focusable="false" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-        <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
-      </svg>
-      GitHub
-    </a>
-  </div>
-
-  <div id="notification" class="noprint"></div>
+  <div id="notification" class="notification"></div>
 
   <script src="app.js"></script>
 </body>
